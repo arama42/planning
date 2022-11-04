@@ -15,7 +15,6 @@
     (finished ?s - shipment)  ; added to track if the shipment is finished
     (ships ?s - shipment ?o - order)
     (includes ?s - shipment ?i - saleitem)
-    (shipmentlocked ?s - shipment ?l - location)  ; added to track if the shipment is being assembled at packing location
 
     ;objects
     (contains ?p - pallette ?i - saleitem)
@@ -74,7 +73,6 @@
                   )
     :effect (and (not (unstarted ?s))
                  (not (available ?l))
-                 (shipmentlocked ?s ?l)
             )
   )
 
@@ -82,7 +80,7 @@
   (:action add_to_ship
     :parameters (?l - location ?s - shipment ?o - order ?i - saleitem ?p - pallette)
     :precondition (and (ships ?s ?o) (orders ?o ?i) (not (includes ?s ?i))  
-                       (packing-location ?l) (shipmentlocked ?s ?l)
+                       (packing-location ?l)
                        (at ?p ?l) (contains ?p ?i)  
                   )
     :effect (and (includes ?s ?i) 
@@ -93,9 +91,8 @@
   ; finish the shipment of order 
   (:action finish_ship
     :parameters (?l - location ?s - shipment ?o - order)
-    :precondition (and (ships ?s ?o) (not (unstarted ?s)) (not (finished ?s)) (shipmentlocked ?s ?l))
+    :precondition (and (ships ?s ?o) (not (unstarted ?s)) (not (finished ?s)))
     :effect (and (finished ?s) 
-                 (not (shipmentlocked ?s ?l))
                  (available ?l) 
             )
   )
