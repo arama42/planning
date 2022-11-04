@@ -37,7 +37,8 @@
   (:action move_robot
 
     :parameters (?l1 - location ?l2 - location ?r - robot)
-    :precondition (and (at ?r ?l1) (free ?r) (connected ?l1 ?l2) (no-robot ?l2))
+    :precondition (and (at ?r ?l1) (not (no-robot ?l1)) (free ?r) (connected ?l1 ?l2) 
+                       (not (at ?r ?l2)) (no-robot ?l2) )
     :effect (and (at ?r ?l2)
                  (not (no-robot ?l2))
                  (not (at ?r ?l1))  
@@ -51,7 +52,8 @@
     :parameters (?l1 - location ?l2 - location ?r - robot ?p - pallette)
     :precondition (and (free ?r) (not (no-robot ?l1)) (at ?r ?l1)
                        (not (no-pallette ?l1)) (at ?p ?l1) (connected ?l1 ?l2) 
-                       (no-robot ?l2) (no-pallette ?l2)
+                       (no-robot ?l2) (not (at ?r ?l2))
+                       (no-pallette ?l2) (not (at ?p ?l2))
                   )
     :effect (and (no-robot ?l1) 
                  (no-pallette ?l1)
